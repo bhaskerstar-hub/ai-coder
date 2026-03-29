@@ -1,0 +1,234 @@
+{
+  "name": "ai-coder",
+  "displayName": "AI Coder",
+  "description": "AI coding assistant for VS Code — chat, inline editing, Tab autocomplete, and agent mode",
+  "version": "0.1.0",
+  "publisher": "bhaskerc",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "chatParticipants": [
+      {
+        "id": "aicoder.assistant",
+        "fullName": "AI Coder",
+        "name": "ai",
+        "description": "AI coding assistant — ask questions, edit code, generate solutions",
+        "isSticky": true
+      }
+    ],
+    "languageModelTools": [
+      {
+        "name": "aicoder_editFile",
+        "displayName": "Edit File",
+        "modelDescription": "Edit a file in the workspace by specifying the file path, the old text to find, and the new text to replace it with.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "filePath": { "type": "string", "description": "Workspace-relative file path" },
+            "oldText": { "type": "string", "description": "Exact text to find and replace" },
+            "newText": { "type": "string", "description": "Replacement text" }
+          },
+          "required": ["filePath", "oldText", "newText"]
+        }
+      },
+      {
+        "name": "aicoder_readFile",
+        "displayName": "Read File",
+        "modelDescription": "Read the contents of a file in the workspace.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "filePath": { "type": "string", "description": "Workspace-relative file path" },
+            "startLine": { "type": "number", "description": "Optional start line (1-indexed)" },
+            "endLine": { "type": "number", "description": "Optional end line (1-indexed)" }
+          },
+          "required": ["filePath"]
+        }
+      },
+      {
+        "name": "aicoder_runTerminal",
+        "displayName": "Run Command",
+        "modelDescription": "Run a shell command in the workspace terminal and return its output.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "command": { "type": "string", "description": "Shell command to execute" },
+            "cwd": { "type": "string", "description": "Working directory (relative to workspace root)" }
+          },
+          "required": ["command"]
+        }
+      },
+      {
+        "name": "aicoder_searchCode",
+        "displayName": "Search Code",
+        "modelDescription": "Search for text or regex patterns across workspace files.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pattern": { "type": "string", "description": "Search pattern (regex supported)" },
+            "glob": { "type": "string", "description": "File glob filter, e.g. '**/*.ts'" },
+            "maxResults": { "type": "number", "description": "Maximum results to return" }
+          },
+          "required": ["pattern"]
+        }
+      },
+      {
+        "name": "aicoder_listFiles",
+        "displayName": "List Files",
+        "modelDescription": "List files in a workspace directory matching an optional glob pattern.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "directory": { "type": "string", "description": "Directory path relative to workspace root" },
+            "glob": { "type": "string", "description": "Glob pattern to filter files" }
+          }
+        }
+      }
+    ],
+    "configuration": {
+      "title": "AI Coder",
+      "properties": {
+        "aiCoder.provider": {
+          "type": "string",
+          "default": "ollama",
+          "enum": ["ollama", "openai", "anthropic", "google"],
+          "enumDescriptions": [
+            "Ollama (local, free)",
+            "OpenAI (GPT-4o, GPT-4, etc.)",
+            "Anthropic (Claude 4, etc.)",
+            "Google (Gemini 2.5, etc.)"
+          ],
+          "description": "LLM provider for AI features"
+        },
+        "aiCoder.ollama.endpoint": {
+          "type": "string",
+          "default": "http://localhost:11434",
+          "description": "Ollama API endpoint"
+        },
+        "aiCoder.ollama.chatModel": {
+          "type": "string",
+          "default": "llama3",
+          "description": "Ollama model for chat and inline editing"
+        },
+        "aiCoder.ollama.completionModel": {
+          "type": "string",
+          "default": "phi3:mini",
+          "description": "Ollama model for Tab autocomplete (fill-in-the-middle)"
+        },
+        "aiCoder.openai.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API key"
+        },
+        "aiCoder.openai.model": {
+          "type": "string",
+          "default": "gpt-4o",
+          "description": "OpenAI model name"
+        },
+        "aiCoder.openai.baseUrl": {
+          "type": "string",
+          "default": "https://api.openai.com/v1",
+          "description": "OpenAI-compatible API base URL"
+        },
+        "aiCoder.anthropic.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Anthropic API key"
+        },
+        "aiCoder.anthropic.model": {
+          "type": "string",
+          "default": "claude-sonnet-4-20250514",
+          "description": "Anthropic model name"
+        },
+        "aiCoder.google.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Google AI API key"
+        },
+        "aiCoder.google.model": {
+          "type": "string",
+          "default": "gemini-2.5-pro",
+          "description": "Google model name"
+        },
+        "aiCoder.autocomplete.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable AI Tab autocomplete"
+        },
+        "aiCoder.autocomplete.debounceMs": {
+          "type": "number",
+          "default": 300,
+          "description": "Debounce delay (ms) before triggering autocomplete"
+        },
+        "aiCoder.context.maxFileSize": {
+          "type": "number",
+          "default": 100000,
+          "description": "Maximum file size (bytes) to include in context"
+        },
+        "aiCoder.context.maxContextTokens": {
+          "type": "number",
+          "default": 8000,
+          "description": "Maximum tokens to use for context in prompts"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "aiCoder.openChat",
+        "title": "AI Coder: Open Chat"
+      },
+      {
+        "command": "aiCoder.inlineEdit",
+        "title": "AI Coder: Inline Edit"
+      },
+      {
+        "command": "aiCoder.toggleAutocomplete",
+        "title": "AI Coder: Toggle Autocomplete"
+      },
+      {
+        "command": "aiCoder.reindexWorkspace",
+        "title": "AI Coder: Reindex Workspace"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "aiCoder.openChat",
+        "key": "ctrl+l",
+        "mac": "cmd+l"
+      },
+      {
+        "command": "aiCoder.inlineEdit",
+        "key": "ctrl+k",
+        "mac": "cmd+k",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.96.0",
+    "eslint": "^9.0.0",
+    "ts-loader": "^9.5.0",
+    "typescript": "^5.5.0",
+    "webpack": "^5.90.0",
+    "webpack-cli": "^5.1.0"
+  }
+}
