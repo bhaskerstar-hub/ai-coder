@@ -6,6 +6,14 @@
   "publisher": "bhaskerc",
   "license": "MIT",
   "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhaskerstar-hub/ai-coder"
+  },
+  "homepage": "https://github.com/bhaskerstar-hub/ai-coder#readme",
+  "bugs": {
+    "url": "https://github.com/bhaskerstar-hub/ai-coder/issues"
+  },
   "engines": {
     "vscode": "^1.96.0"
   },
