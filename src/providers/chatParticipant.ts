@@ -21,19 +21,40 @@ interface FileBlock {
 
 function parseFileBlocks(text: string): FileBlock[] {
   const blocks: FileBlock[] = [];
-  const regex = /FILE:\s*(.+?)\s*\n```(\w*)\n([\s\S]*?)```/g;
-  let match: RegExpExecArray | null;
+  const seen = new Set<string>();
 
-  while ((match = regex.exec(text)) !== null) {
-    const filePath = match[1].trim().replace(/^`|`$/g, '');
-    const language = match[2] || '';
-    const content = match[3];
-    if (filePath && content) {
-      blocks.push({ filePath, content, language });
+  const patterns = [
+    // FILE: path/to/file.ext
+    /FILE:\s*`?([^\n`]+\.\w+)`?\s*\n+```(\w*)\n([\s\S]*?)```/g,
+    // **filename.ext**  (bold filename before code block)
+    /\*\*([^\*\n]+\.\w+)\*\*\s*\n+```(\w*)\n([\s\S]*?)```/g,
+    // `filename.ext`  (inline code filename before code block)
+    /(?:^|\n)`([^\n`]+\.\w+)`\s*:?\s*\n+```(\w*)\n([\s\S]*?)```/g,
+    // filename.ext:  (plain filename with colon)
+    /(?:^|\n)([a-zA-Z0-9_\-\/]+\.\w+)\s*:\s*\n+```(\w*)\n([\s\S]*?)```/g,
+    // "Create a file called filename.ext" pattern — file called `name`
+    /file (?:called|named) `([^\n`]+\.\w+)`\s*:?\s*\n+```(\w*)\n([\s\S]*?)```/gi,
+  ];
+
+  for (const regex of patterns) {
+    let match: RegExpExecArray | null;
+    while ((match = regex.exec(text)) !== null) {
+      const filePath = match[1].trim().replace(/^`|`$/g, '').replace(/^\*+|\*+$/g, '');
+      const language = match[2] || '';
+      const content = match[3];
+      if (filePath && content && !seen.has(filePath) && isLikelyFilePath(filePath)) {
+        seen.add(filePath);
+        blocks.push({ filePath, content, language });
+      }
     }
   }
 
   return blocks;
+}
+
+function isLikelyFilePath(name: string): boolean {
+  const codeExtensions = /\.(py|js|ts|tsx|jsx|java|c|cpp|h|hpp|cs|go|rs|rb|php|swift|kt|sh|bash|zsh|html|css|scss|json|yaml|yml|xml|toml|sql|r|m|mm|pl|lua|ex|exs|hs|scala|dart|vue|svelte|md|txt|cfg|ini|env|dockerfile|makefile)$/i;
+  return codeExtensions.test(name) && !name.includes(' ') && name.length < 100;
 }
 
 async function createFilesInWorkspace(
