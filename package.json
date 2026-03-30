@@ -3,7 +3,7 @@
   "displayName": "AI Coder",
   "description": "AI coding assistant for VS Code — chat, inline editing, Tab autocomplete, and agent mode",
   "version": "0.1.0",
-  "publisher": "bhaskerc",
+  "publisher": "bhaskerchaurasia",
   "license": "MIT",
   "icon": "images/icon.png",
   "repository": {
