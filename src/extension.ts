@@ -66,6 +66,29 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     })
   );
 
+  // Permission mode command
+  context.subscriptions.push(
+    vscode.commands.registerCommand('aiCoder.setPermissionMode', async () => {
+      const current = vscode.workspace.getConfiguration('aiCoder').get<string>('permissionMode', 'ask');
+      const items: vscode.QuickPickItem[] = [
+        { label: 'ask', description: 'Ask before each destructive action', detail: current === 'ask' ? '$(check) Current' : undefined },
+        { label: 'plan', description: 'Show plan first, then execute', detail: current === 'plan' ? '$(check) Current' : undefined },
+        { label: 'auto', description: 'Auto-approve all actions', detail: current === 'auto' ? '$(check) Current' : undefined },
+      ];
+      const picked = await vscode.window.showQuickPick(items, {
+        title: 'AI Coder: Set Permission Mode',
+        placeHolder: `Current: ${current}`,
+      });
+      if (picked) {
+        await vscode.workspace.getConfiguration('aiCoder').update(
+          'permissionMode', picked.label, vscode.ConfigurationTarget.Global
+        );
+        updateStatusBar(statusBarItem);
+        vscode.window.showInformationMessage(`AI Coder: Permission mode set to "${picked.label}"`);
+      }
+    })
+  );
+
   // Select Model command — QuickPick with live Ollama model discovery
   context.subscriptions.push(
     vscode.commands.registerCommand('aiCoder.selectModel', async () => {
@@ -105,25 +128,30 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     })
   );
 
-  // Status bar — click opens model selector
+  // Status bar — shows model + permission mode
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-  const config = getConfig();
-  statusBarItem.text = `$(sparkle) AI Coder (${config.ollama.chatModel})`;
-  statusBarItem.tooltip = 'AI Coder — Click to select model';
   statusBarItem.command = 'aiCoder.selectModel';
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
+  updateStatusBar(statusBarItem);
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('aiCoder')) {
-        const updated = getConfig();
-        statusBarItem.text = `$(sparkle) AI Coder (${updated.ollama.chatModel})`;
+        updateStatusBar(statusBarItem);
       }
     })
   );
 
   outputChannel.appendLine('AI Coder extension activated successfully');
+}
+
+function updateStatusBar(item: vscode.StatusBarItem): void {
+  const cfg = getConfig();
+  const mode = vscode.workspace.getConfiguration('aiCoder').get<string>('permissionMode', 'ask');
+  const modeIcon = mode === 'auto' ? '$(run-all)' : mode === 'plan' ? '$(list-ordered)' : '$(shield)';
+  item.text = `$(sparkle) AI Coder (${cfg.ollama.chatModel}) ${modeIcon}`;
+  item.tooltip = `AI Coder — Model: ${cfg.ollama.chatModel} | Mode: ${mode}`;
 }
 
 export function deactivate(): void {
