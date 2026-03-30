@@ -27,6 +27,12 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "languageModelChatProviders": [
+      {
+        "vendor": "aicoder",
+        "displayName": "AI Coder (Ollama)"
+      }
+    ],
     "chatParticipants": [
       {
         "id": "aicoder.assistant",
@@ -204,6 +210,10 @@
       {
         "command": "aiCoder.toggleAutocomplete",
         "title": "AI Coder: Toggle Autocomplete"
+      },
+      {
+        "command": "aiCoder.selectModel",
+        "title": "AI Coder: Select Model"
       },
       {
         "command": "aiCoder.reindexWorkspace",

@@ -73,12 +73,15 @@ async function handleChatRequest(
 
   messages.push({ role: 'user', content: userPrompt });
 
+  // If user selected an Ollama model from the native dropdown, use it
+  const modelOverride = extractOllamaModelFromRequest(request);
+
   const client = getLLMClient();
   const abortController = new AbortController();
   token.onCancellationRequested(() => abortController.abort());
 
   try {
-    for await (const chunk of client.streamChat({ messages }, abortController.signal)) {
+    for await (const chunk of client.streamChat({ messages, modelOverride }, abortController.signal)) {
       if (token.isCancellationRequested) break;
       response.markdown(chunk);
     }
@@ -92,4 +95,16 @@ async function handleChatRequest(
   }
 
   return {};
+}
+
+function extractOllamaModelFromRequest(request: vscode.ChatRequest): string | undefined {
+  try {
+    const model = (request as unknown as { model?: { id?: string } }).model;
+    if (model?.id?.startsWith('aicoder:ollama-')) {
+      return model.id.replace('aicoder:ollama-', '');
+    }
+  } catch {
+    // model info not available
+  }
+  return undefined;
 }

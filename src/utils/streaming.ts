@@ -21,6 +21,7 @@ export interface LLMChatRequest {
   maxTokens?: number;
   temperature?: number;
   stop?: string[];
+  modelOverride?: string;
 }
 
 export type StreamCallback = (chunk: LLMStreamChunk) => void;

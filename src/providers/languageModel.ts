@@ -32,7 +32,7 @@ export class LLMClient {
       }
     };
 
-    const streamPromise = this.dispatchChat(config.provider, request, onChunk, signal);
+    const streamPromise = this.dispatchChat(config.provider, request, onChunk, signal, request.modelOverride);
     streamPromise.catch((err) => {
       done = true;
       if (resolveNext) resolveNext({ value: '', done: true });
@@ -126,13 +126,14 @@ export class LLMClient {
     provider: LLMProvider,
     request: LLMChatRequest,
     onChunk: StreamCallback,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    modelOverride?: string
   ): Promise<void> {
     const config = getConfig();
 
     switch (provider) {
       case 'ollama':
-        return this.ollamaChat(config.ollama.endpoint, config.ollama.chatModel, request, onChunk, signal);
+        return this.ollamaChat(config.ollama.endpoint, modelOverride || config.ollama.chatModel, request, onChunk, signal);
       case 'openai':
         return this.openaiChat(config.openai.baseUrl, config.openai.apiKey, config.openai.model, request, onChunk, signal);
       case 'anthropic':

@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import { registerChatParticipant } from './providers/chatParticipant';
 import { registerInlineCompletionProvider } from './providers/inlineCompletion';
+import { registerLanguageModelProvider } from './providers/languageModelProvider';
 import { registerTools } from './agent/tools';
 import { getIndexer } from './context/indexer';
 import { getConfig } from './config/settings';
+import { listOllamaModels, formatModelSize } from './providers/ollamaDiscovery';
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   const outputChannel = vscode.window.createOutputChannel('AI Coder');
@@ -12,6 +14,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   registerChatParticipant(context);
   outputChannel.appendLine('Chat participant registered');
+
+  registerLanguageModelProvider(context);
+  outputChannel.appendLine('Language model provider registered');
 
   registerInlineCompletionProvider(context);
   outputChannel.appendLine('Inline completion provider registered');
@@ -61,11 +66,51 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     })
   );
 
+  // Select Model command — QuickPick with live Ollama model discovery
+  context.subscriptions.push(
+    vscode.commands.registerCommand('aiCoder.selectModel', async () => {
+      const models = await listOllamaModels(true);
+
+      if (models.length === 0) {
+        const action = await vscode.window.showWarningMessage(
+          'AI Coder: No Ollama models found. Is Ollama running?',
+          'Open Settings'
+        );
+        if (action === 'Open Settings') {
+          vscode.commands.executeCommand('workbench.action.openSettings', 'aiCoder.ollama');
+        }
+        return;
+      }
+
+      const config = getConfig();
+      const items: vscode.QuickPickItem[] = models.map((m) => ({
+        label: m.name,
+        description: formatModelSize(m.size),
+        detail: m.name === config.ollama.chatModel ? '$(check) Current chat model' : undefined,
+      }));
+
+      const picked = await vscode.window.showQuickPick(items, {
+        title: 'AI Coder: Select Ollama Model',
+        placeHolder: `Current: ${config.ollama.chatModel}`,
+      });
+
+      if (picked) {
+        await vscode.workspace.getConfiguration('aiCoder').update(
+          'ollama.chatModel',
+          picked.label,
+          vscode.ConfigurationTarget.Global
+        );
+        vscode.window.showInformationMessage(`AI Coder: Chat model set to ${picked.label}`);
+      }
+    })
+  );
+
+  // Status bar — click opens model selector
   const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
   const config = getConfig();
-  statusBarItem.text = `$(sparkle) AI Coder (${config.provider})`;
-  statusBarItem.tooltip = 'AI Coder - Click to open chat';
-  statusBarItem.command = 'aiCoder.openChat';
+  statusBarItem.text = `$(sparkle) AI Coder (${config.ollama.chatModel})`;
+  statusBarItem.tooltip = 'AI Coder — Click to select model';
+  statusBarItem.command = 'aiCoder.selectModel';
   statusBarItem.show();
   context.subscriptions.push(statusBarItem);
 
@@ -73,7 +118,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('aiCoder')) {
         const updated = getConfig();
-        statusBarItem.text = `$(sparkle) AI Coder (${updated.provider})`;
+        statusBarItem.text = `$(sparkle) AI Coder (${updated.ollama.chatModel})`;
       }
     })
   );
