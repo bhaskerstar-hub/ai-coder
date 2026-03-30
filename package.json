@@ -50,11 +50,24 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "filePath": { "type": "string", "description": "Workspace-relative file path" },
-            "oldText": { "type": "string", "description": "Exact text to find and replace" },
-            "newText": { "type": "string", "description": "Replacement text" }
+            "filePath": {
+              "type": "string",
+              "description": "Workspace-relative file path"
+            },
+            "oldText": {
+              "type": "string",
+              "description": "Exact text to find and replace"
+            },
+            "newText": {
+              "type": "string",
+              "description": "Replacement text"
+            }
           },
-          "required": ["filePath", "oldText", "newText"]
+          "required": [
+            "filePath",
+            "oldText",
+            "newText"
+          ]
         }
       },
       {
@@ -64,11 +77,22 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "filePath": { "type": "string", "description": "Workspace-relative file path" },
-            "startLine": { "type": "number", "description": "Optional start line (1-indexed)" },
-            "endLine": { "type": "number", "description": "Optional end line (1-indexed)" }
+            "filePath": {
+              "type": "string",
+              "description": "Workspace-relative file path"
+            },
+            "startLine": {
+              "type": "number",
+              "description": "Optional start line (1-indexed)"
+            },
+            "endLine": {
+              "type": "number",
+              "description": "Optional end line (1-indexed)"
+            }
           },
-          "required": ["filePath"]
+          "required": [
+            "filePath"
+          ]
         }
       },
       {
@@ -78,10 +102,18 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "command": { "type": "string", "description": "Shell command to execute" },
-            "cwd": { "type": "string", "description": "Working directory (relative to workspace root)" }
+            "command": {
+              "type": "string",
+              "description": "Shell command to execute"
+            },
+            "cwd": {
+              "type": "string",
+              "description": "Working directory (relative to workspace root)"
+            }
           },
-          "required": ["command"]
+          "required": [
+            "command"
+          ]
         }
       },
       {
@@ -91,11 +123,22 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "pattern": { "type": "string", "description": "Search pattern (regex supported)" },
-            "glob": { "type": "string", "description": "File glob filter, e.g. '**/*.ts'" },
-            "maxResults": { "type": "number", "description": "Maximum results to return" }
+            "pattern": {
+              "type": "string",
+              "description": "Search pattern (regex supported)"
+            },
+            "glob": {
+              "type": "string",
+              "description": "File glob filter, e.g. '**/*.ts'"
+            },
+            "maxResults": {
+              "type": "number",
+              "description": "Maximum results to return"
+            }
           },
-          "required": ["pattern"]
+          "required": [
+            "pattern"
+          ]
         }
       },
       {
@@ -105,8 +148,14 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "directory": { "type": "string", "description": "Directory path relative to workspace root" },
-            "glob": { "type": "string", "description": "Glob pattern to filter files" }
+            "directory": {
+              "type": "string",
+              "description": "Directory path relative to workspace root"
+            },
+            "glob": {
+              "type": "string",
+              "description": "Glob pattern to filter files"
+            }
           }
         }
       }
@@ -117,7 +166,12 @@
         "aiCoder.provider": {
           "type": "string",
           "default": "ollama",
-          "enum": ["ollama", "openai", "anthropic", "google"],
+          "enum": [
+            "ollama",
+            "openai",
+            "anthropic",
+            "google"
+          ],
           "enumDescriptions": [
             "Ollama (local, free)",
             "OpenAI (GPT-4o, GPT-4, etc.)",
