@@ -19,3 +19,107 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+
+ADDITIONAL DISCLAIMERS AND NOTICES
+===================================
+
+1. AI-GENERATED OUTPUT DISCLAIMER
+
+   This software facilitates the generation of code and text using third-party
+   large language models (LLMs). The authors and copyright holders of this
+   software make NO representations or warranties regarding the accuracy,
+   completeness, correctness, safety, or suitability of any AI-generated
+   output. Users are solely responsible for reviewing, testing, and validating
+   all AI-generated code before incorporating it into any project or deploying
+   it in any environment. AI-generated output may contain errors, security
+   vulnerabilities, licensing conflicts, or other defects. Use at your own
+   risk.
+
+2. THIRD-PARTY SERVICES DISCLAIMER
+
+   This software integrates with and sends data to third-party services
+   including but not limited to:
+
+     - Ollama (https://ollama.com)
+     - OpenAI API (https://openai.com)
+     - Anthropic API (https://anthropic.com)
+     - Google Generative AI API (https://ai.google.dev)
+
+   The authors and copyright holders of this software are NOT affiliated with,
+   endorsed by, or sponsored by any of the above services. Use of these
+   third-party services is governed by their respective terms of service,
+   privacy policies, and usage agreements. Users are solely responsible for
+   complying with the terms and conditions of any third-party service they
+   choose to use through this software. The authors accept no liability for
+   any costs, charges, data loss, data exposure, or other consequences arising
+   from the use of third-party services.
+
+3. DATA PRIVACY AND SECURITY NOTICE
+
+   When configured to use cloud-based LLM providers (OpenAI, Anthropic,
+   Google), this software transmits code, file contents, and user prompts to
+   external servers. Users are solely responsible for ensuring that no
+   confidential, proprietary, trade-secret, classified, personally
+   identifiable, or otherwise sensitive information is transmitted to
+   third-party services without proper authorization. The authors accept no
+   responsibility for any data breach, data loss, unauthorized disclosure, or
+   privacy violation resulting from the use of this software.
+
+4. NO PROFESSIONAL ADVICE
+
+   The AI-generated code and suggestions provided through this software do not
+   constitute professional advice of any kind, including but not limited to
+   legal, financial, medical, or security advice. Users should seek
+   independent professional counsel where appropriate.
+
+5. INDEMNIFICATION
+
+   By using this software, you agree to indemnify, defend, and hold harmless
+   the authors and copyright holders from and against any claims, damages,
+   losses, liabilities, costs, and expenses (including reasonable attorneys'
+   fees) arising out of or related to your use of the software, your use of
+   any AI-generated output, or your violation of these terms.
+
+6. LIMITATION OF LIABILITY
+
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, CONSEQUENTIAL, OR PUNITIVE
+   DAMAGES (INCLUDING BUT NOT LIMITED TO PROCUREMENT OF SUBSTITUTE GOODS OR
+   SERVICES, LOSS OF USE, DATA, OR PROFITS, OR BUSINESS INTERRUPTION) HOWEVER
+   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+   OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+   SUCH DAMAGES.
+
+7. TRADEMARK NOTICE
+
+   "AI Coder" is not a registered trademark. "Visual Studio Code" and
+   "VS Code" are trademarks of Microsoft Corporation. "Ollama" is a trademark
+   of Ollama, Inc. "OpenAI" and "GPT" are trademarks of OpenAI, Inc.
+   "Anthropic" and "Claude" are trademarks of Anthropic, PBC. "Google" and
+   "Gemini" are trademarks of Google LLC. All other trademarks are the
+   property of their respective owners. The use of these names in this
+   software is for identification and interoperability purposes only and does
+   not imply endorsement, affiliation, or sponsorship.
+
+8. CONTRIBUTIONS
+
+   By submitting a contribution (via pull request, issue, or otherwise) to
+   this project, you represent that you have the right to license your
+   contribution under the terms of this MIT License, and you agree that your
+   contribution shall be licensed under the same terms without any additional
+   restrictions.
+
+9. EXPORT COMPLIANCE
+
+   This software may be subject to export control laws and regulations. Users
+   are responsible for complying with all applicable export laws and
+   regulations in their jurisdiction.
+
+10. SEVERABILITY
+
+    If any provision of this license or the additional disclaimers is held to
+    be unenforceable, such provision shall be reformed only to the extent
+    necessary to make it enforceable, and the remaining provisions shall
+    continue in full force and effect.

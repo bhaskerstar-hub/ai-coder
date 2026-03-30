@@ -1,6 +1,10 @@
 # AI Coder — VS Code Extension
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 An AI coding assistant for VS Code with chat panel, inline editing, Tab autocomplete, and agent mode with tool use.
+
+> **Disclaimer:** This is an open-source tool provided "as is" with no warranty. AI-generated code may contain errors — always review before use. See [LICENSE](LICENSE) for full terms and disclaimers.
 
 ## Features
 
@@ -108,3 +112,23 @@ npx @vscode/vsce package
 - **Tab Autocomplete:** `InlineCompletionItemProvider` with debouncing, fill-in-the-middle prompting, and configurable model.
 - **Agent Tools:** `LanguageModelTool` registrations for file operations, terminal, and search. These are available to the LLM during chat.
 - **Codebase Context:** Active file, open files, and selected text are automatically injected into every prompt. The workspace indexer provides keyword-based retrieval.
+
+## Privacy
+
+- **Ollama (default):** All processing stays on your machine. No data leaves your device.
+- **Cloud providers (OpenAI, Anthropic, Google):** Your code and prompts are sent to external servers. Do not send confidential or proprietary code to cloud providers without proper authorization. Review each provider's terms of service and privacy policy before use.
+
+## Disclaimer
+
+This software is provided under the [MIT License](LICENSE) with additional disclaimers. Key points:
+
+- **No warranty.** The software is provided "as is" without any guarantees.
+- **AI output is not verified.** You are responsible for reviewing and testing all AI-generated code.
+- **Third-party services.** This extension is not affiliated with or endorsed by Microsoft, Ollama, OpenAI, Anthropic, or Google.
+- **Your responsibility.** You are solely responsible for how you use the software and any AI-generated output.
+
+See the [LICENSE](LICENSE) file for the complete terms, disclaimers, and additional notices.
+
+## License
+
+[MIT](LICENSE) — Copyright (c) 2026 Bhasker Chaurasia
